@@ -10,13 +10,12 @@ require 'uri'
 require 'date'
 
 
-# TODO loop for get all letters
-# Save the sources of the .wav files into sources.txt
-def save_sources
-  url = URI.parse("http://www.elearnspanishlanguage.com/pronunciation/audiodictionary-a.html")
+# Saves the sources of the .wav files into sources.txt
+def save_sources(letter)
+  url = URI.parse("http://www.elearnspanishlanguage.com/pronunciation/audiodictionary-#{letter}.html")
 
   # Saves the HTML content
-  response = Net::HTTP.start(url.host, url.port) { |http| http.get('/pronunciation/audiodictionary-a.html') }
+  response = Net::HTTP.start(url.host, url.port) { |http| http.get("/pronunciation/audiodictionary-#{letter}.html") }
 
   open("sources.txt", "w") { |file|
     response.body.lines.each do |line|
@@ -30,15 +29,17 @@ def save_sources
     end
   }
 
-  puts "All sources writed in sources.txt!!"
+  puts "All sources with the letter #{letter} writed in sources.txt!!"
 end
 
-def create_directory(dirname)
-  unless Dir.exists?(dirname)
-    Dir.mkdir(dirname)
+def create_directory(dirname, letter)
+  unless Dir.exists?("Downloads (#{dirname}) - Letter #{letter}")
+    Dir.mkdir("Downloads (#{dirname}) - Letter #{letter}")
   else
-    puts "Skipping creating directory " + dirname + ". It already exists."
+    puts "Skipping creating directory 'Downloads (#{dirname}) - Letter #{letter}'. It already exists."
   end
+
+  "Downloads (#{dirname}) - Letter #{letter}"
 end
 
 def read_uris_from_file(file)
@@ -119,17 +120,21 @@ end
 
 
 def main
-  save_sources
+  ('a'..'z').each do |letter|
+    save_sources(letter)
 
-  sources_file = ARGV.first
-  uris = read_uris_from_file(sources_file)
+    sources_file = ARGV.first
+    uris = read_uris_from_file(sources_file)
 
-  target_dir_name = Date.today.strftime('%y%m%d')
-  create_directory(target_dir_name)
-  Dir.chdir(target_dir_name)
-  puts "Changed directory: " + Dir.pwd
+    target_dir_name = Date.today.strftime('%y%m%d')
+    directory_name = create_directory(target_dir_name, letter)
+    Dir.chdir(directory_name)
+    puts "Changed directory: " + Dir.pwd
 
-  download_resources(uris)
+    download_resources(uris)
+
+    puts "All words with the letter #{letter} downloaded"
+  end
 end
 
 
