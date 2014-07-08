@@ -126,6 +126,7 @@ def main
     sources_file = ARGV.first
     uris = read_uris_from_file(sources_file)
 
+    home_directory = Dir.pwd
     target_dir_name = Date.today.strftime('%y%m%d')
     directory_name = create_directory(target_dir_name, letter)
     Dir.chdir(directory_name)
@@ -134,6 +135,11 @@ def main
     download_resources(uris)
 
     puts "All words with the letter #{letter} downloaded"
+
+    Dir.chdir(home_directory)
+    puts "Back to #{home_directory} directory"
+
+    puts
   end
 end
 
