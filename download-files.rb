@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Ruby script to download .wav files from individual URLs via HTTP/HTTPS/FTP specified in an external file.
-# Author: Marcos Serpa (some code from Tobias Preuss)
+# Author: Marcos Serpa (base code from Tobias Preuss)
 # License: Creative Commons Attribution-ShareAlike 3.0 Unported
 
 require 'net/http'
@@ -164,7 +164,7 @@ end
 if __FILE__ == $0
   usage = <<-EOU
 
-  usage: type 'ruby #{File.basename($0)} sources.txt' where 'sources.txt' is the file with 
+  usage: type 'ruby #{File.basename($0)} sources.txt' where 'sources.txt' is the file with
     de URIs of the files to be accessed and downloaded
 
     The file sources.txt should contain at least an URL and the target file name. Like this:
